@@ -8,7 +8,7 @@ from game import GameController
 
 def get_controller_from_option(option: str, index: int) -> Controller:
     
-    assert option in ["human", "agent", "minimax"]
+    assert option in ["human", "agent", "minimax", "random"]
     if option == "human":
         return HumanController(index=index)
     elif option == "agent":
@@ -37,8 +37,8 @@ def main(args) -> None:
     view: View = get_view_from_option(args.view)
     
     # Controllers
-    player_1: Controller = get_controller_from_option(args.agent1, 0)
-    player_2: Controller = get_controller_from_option(args.agent2, 1)
+    player_1: Controller = get_controller_from_option(args.player1, 0)
+    player_2: Controller = get_controller_from_option(args.player2, 1)
 
     # Game controller
     game: GameController = GameController(model=model,
@@ -54,7 +54,7 @@ def main(args) -> None:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Tic-Tac-Toe game")
     parser.add_argument("--view", type=str, help="Rendering of the game", choices=["gui", "text", "no-view"], default="no-view")
-    parser.add_argument("--player_1", type=str, help="Player 1", choices=["human", "minimax", "random"], default="random")
-    parser.add_argument("--player_2", type=str, help="Player 2", choices=["human", "minimax", "random"], default="random")
+    parser.add_argument("--player1", type=str, help="Player 1", choices=["human", "minimax", "random"], default="random")
+    parser.add_argument("--player2", type=str, help="Player 2", choices=["human", "minimax", "random"], default="random")
     args = parser.parse_args()
     main(args)
