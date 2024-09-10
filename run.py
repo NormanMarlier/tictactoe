@@ -69,11 +69,33 @@ def get_view_from_option(option: str) -> View:
         return NoView()
 
 
+def play_game(view: View, player1: Controller, player2: Controller) -> int:
+    """
+    Play a game and return the outcome.
+    
+    Parameters:
+    - view (View): the renderer.
+    - player1 (Controller): player 1 (X)
+    - player2 (Controller): player 2 (O).
+    
+    Returns:
+    - outcome (int): the outcome of the game.
+    """
+    # Initial state
+    model: GameState = GameState()
+
+    # Game Controller
+    game: GameController = GameController(model=model,
+                                          view=view,
+                                          player1=player1,
+                                          player2=player2)
+    # Game loop
+    game.game_loop()
+
+    return game.result()
+
 
 def main(args) -> None:
-
-    # Model
-    model: GameState = GameState()
 
     # View
     view: View = get_view_from_option(args.view)
@@ -82,13 +104,7 @@ def main(args) -> None:
     player_1: Controller = get_controller_from_option(args.player1, 0)
     player_2: Controller = get_controller_from_option(args.player2, 1)
 
-    # Game controller
-    game: GameController = GameController(model=model,
-                                          view=view,
-                                          player1=player_1,
-                                          player2=player_2)
-    # Game loop
-    game.game_loop()
+    play_game(view=view, player1=player_1, player2=player_2)
 
 
 if __name__ == "__main__":
