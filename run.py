@@ -7,25 +7,67 @@ from game import GameController
 
 
 def get_controller_from_option(option: str, index: int) -> Controller:
-    
-    assert option in ["human", "agent", "minimax", "random"]
+    """
+    Get a Controller for a player based on the selected option.
+
+    Parameters:
+    - option (str): The type of controller ("human", "agent", "minimax", "random").
+    - index (int): The index of the player (used to identify the player).
+
+    Returns:
+    - Controller: A controller object for the player based on the selected option.
+    """
+    # List of valid options for the controller types
+    available_options: list[str] = ["human", "agent", "minimax", "random"]
+
+    # Ensure that the option provided is one of the available options
+    assert option in available_options, f"Invalid option: {option}. Expected one of {available_options}"
+
+    # Return the appropriate controller based on the selected option
     if option == "human":
+        # Return a HumanController, used for player-controlled input
         return HumanController(index=index)
+    
     elif option == "agent":
-        pass
+        # Placeholder for an agent-based controller (likely to be implemented later)
+        pass  # No agent controller defined yet
+    
     elif option == "minimax":
+        # Return a MinimaxController, used for an AI that uses the minimax algorithm
         return MinimaxController(index=index)
-    else:
+    
+    elif option == "random":
+        # Return an AgentController with a RandomAgent, which makes random moves
         return AgentController(index=index, agent=RandomAgent())
+    
+    else:
+        # Raise an error if an invalid option is provided (this should never happen due to the earlier assert)
+        raise ValueError(f"option: {option} not in available options: {available_options}")
+
 
 
 def get_view_from_option(option: str) -> View:
+    """
+    Get the appropriate renderer (view) for the game based on the selected option.
+
+    Parameters:
+    - option (str): The type of rendering. Can be "gui", "text", or other.
+
+    Returns:
+    - View: The renderer object that handles how the game state is displayed.
+    """
+    # If the option is "gui", return the GUI-based view for graphical rendering
     if option == "gui":
         return GUIView()
+    
+    # If the option is "text", return the text-based view for CLI rendering
     elif option == "text":
         return TextView()
+    
+    # For any other option (or default), return a NoView, which performs no rendering
     else:
         return NoView()
+
 
 
 def main(args) -> None:
@@ -47,8 +89,6 @@ def main(args) -> None:
                                           player2=player_2)
     # Game loop
     game.game_loop()
-
-
 
 
 if __name__ == "__main__":
