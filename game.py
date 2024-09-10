@@ -71,6 +71,24 @@ class GameController:
             # Render the current game state using the view
             self.view.display(self.model)
 
+    def result(self) -> int:
+        """
+        Return the outcome of a game.
+        
+        Returns:
+        - outcome (int): the outcome of the game (-1 = lose, 0 = tie, 1 = win) for the player 1.
+        """
+        if self.model.is_game_over():
+            if self.model.is_win():
+                return 1
+            elif self.model.is_lose():
+                return -1
+            elif self.model.is_tie():
+                return 0
+            else:
+                raise ValueError(f"This state {self.model.data.squares} is not a terminal state")
+        else:
+            raise ValueError(f"This state {self.model.data.squares} is not a terminal state")
     
 
 if __name__ == "__main__":
@@ -87,5 +105,6 @@ if __name__ == "__main__":
     minimax_controller0 = MinimaxController(index=0)
     minimax_controller1 = MinimaxController(index=1)
 
-    game = GameController(model=model, view=view, player1=minimax_controller0, player2=bot_controller1)
+    game = GameController(model=model, view=view, player1=bot_controller0, player2=minimax_controller1)
     game.game_loop()
+    print(game.result())
