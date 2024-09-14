@@ -109,7 +109,7 @@ class GameState:
         - list[int]: A list of indices corresponding to empty positions on the board.
         """
         # Check that successors exist
-        if self.is_win() or self.is_lose() or self.is_tie():
+        if self.is_game_over():
             return []
         return [i for i, mark in enumerate(self.data.squares) if mark == 0]
     
@@ -182,6 +182,30 @@ class GameState:
         - GameState: a deepcopy of the state.
         """
         return deepcopy(self)
+    
+    def evaluate(self) -> float:
+        """
+        Evaluate the game state heuristically for the minimax/alpha-beta pruning
+        
+        Returns:
+        - score (float): the score for the game state.
+        """
+        if self.is_game_over():
+            if self.is_win():
+                return 1.
+            elif self.is_lose():
+                return -1.
+        
+        return 0.
+
+    def get_reward(self) -> float:
+        """
+        Return the reward based on the current state, useful for RL.
+        
+        Returns:
+        - reward (float): the reward of the current state.
+        """
+        return self.evaluate()
 
 
 # Generate with ChatGPT
