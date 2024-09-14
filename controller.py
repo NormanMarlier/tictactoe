@@ -7,6 +7,7 @@ from agent import Agent
 from settings import GAME_H, GAME_W
 from utils import get_board_matrix, inside_case
 from minimax import alpha_beta_search
+from mcts import Node, monte_carlo_tree_search
 
 
 class Controller:
@@ -179,6 +180,49 @@ class MinimaxController(Controller):
         - move_history (list[Action] | None): A list storing previous moves (optional).
         """
         # Select the best move using the Minimax algorithm
+        action: Action = self.select_move(state=state)
+
+        # Check if the selected move is a legal move
+        if action.pos in state.get_legal_moves():
+            # If move history tracking is enabled, add this move to the history
+            if move_history:
+                move_history.append(action)
+
+            # Apply the selected action to the game state (update the board)
+            state.apply_action(action)
+        else:
+            # If the move is illegal, do nothing (can add feedback or error handling here if needed)
+            pass
+
+
+class MCTSController(Controller):
+    """
+    """
+    def __init__(self, index: int, simulations: int = 1000) -> None:
+        super().__init__(index)
+        self.simulations: int = simulations
+        self.exploration_value: float = 2.
+    
+    def select_move(self, state: GameState) -> Action:
+
+        root: Node = Node(state=state)
+
+        best_node: Node = monte_carlo_tree_search(root=root,
+                                                  iterations=self.simulations,
+                                                  index=self.index,
+                                                  c=self.exploration_value)
+
+        return Action(agent=self.index, pos=best_node.pos)
+    
+    def process_inputs(self, state: GameState, move_history: list[Action] | None) -> None:
+        """
+        Process the inputs by selecting and applying the agent's move based on the current game state.
+        
+        Parameters:
+        - state (GameState): The current state of the game.
+        - move_history (list[Action] | None): A list storing previous moves (optional).
+        """
+        # Select the agent's move using the select_move method
         action: Action = self.select_move(state=state)
 
         # Check if the selected move is a legal move
