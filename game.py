@@ -50,7 +50,7 @@ class GameController:
         # Continue looping until the game reaches a terminal state (win, draw)
         while not self.model.is_game_over():
             # Optionally, you can print the current move number for debugging
-            # print(f"Turn {self.num_moves}")
+            print(f"Turn {self.num_moves}")
             
             # Clone the previous game state to check if it changes after a move
             prev_state: GameState = self.model.clone()

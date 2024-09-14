@@ -1,7 +1,7 @@
 import argparse
 from engine import GameState
 from agent import RandomAgent
-from controller import Controller, HumanController, AgentController, MinimaxController
+from controller import Controller, HumanController, AgentController, MinimaxController, MCTSController
 from gui import View, NoView, TextView, GUIView
 from game import GameController
 
@@ -18,7 +18,7 @@ def get_controller_from_option(option: str, index: int) -> Controller:
     - Controller: A controller object for the player based on the selected option.
     """
     # List of valid options for the controller types
-    available_options: list[str] = ["human", "agent", "minimax", "random"]
+    available_options: list[str] = ["human", "agent", "minimax", "random", "mcts"]
 
     # Ensure that the option provided is one of the available options
     assert option in available_options, f"Invalid option: {option}. Expected one of {available_options}"
@@ -35,6 +35,10 @@ def get_controller_from_option(option: str, index: int) -> Controller:
     elif option == "minimax":
         # Return a MinimaxController, used for an AI that uses the minimax algorithm
         return MinimaxController(index=index)
+    
+    elif option == "mcts":
+        # Return a MCTSController, used for an AI that uses monte carlo tree search algorithm
+        return MCTSController(index=index)
     
     elif option == "random":
         # Return an AgentController with a RandomAgent, which makes random moves
@@ -110,7 +114,7 @@ def main(args) -> None:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Tic-Tac-Toe game")
     parser.add_argument("--view", type=str, help="Rendering of the game", choices=["gui", "text", "no-view"], default="no-view")
-    parser.add_argument("--player1", type=str, help="Player 1", choices=["human", "minimax", "random"], default="random")
-    parser.add_argument("--player2", type=str, help="Player 2", choices=["human", "minimax", "random"], default="random")
+    parser.add_argument("--player1", type=str, help="Player 1", choices=["human", "minimax", "random", "mcts"], default="random")
+    parser.add_argument("--player2", type=str, help="Player 2", choices=["human", "minimax", "random", "mcts"], default="random")
     args = parser.parse_args()
     main(args)
