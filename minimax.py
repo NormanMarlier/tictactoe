@@ -1,7 +1,7 @@
 import numpy as np
 
 def alpha_beta_search(state, max_p: bool) -> float:
-    v = minimax(state, alpha=-np.inf, beta=np.inf, max_p=max_p)
+    v: float = minimax(state, alpha=-np.inf, beta=np.inf, max_p=max_p)
     return v
 
 
@@ -13,8 +13,9 @@ def minimax(state, alpha: float, beta: float, max_p: bool) -> float:
         return -1.
     elif state.is_tie():
         return 0.
+    v: float
     if max_p:
-        v: float = -np.inf
+        v = -np.inf
         for successor in state.generate_successors(0):
             v = max(v, minimax(successor, alpha, beta, False))
             if v >= beta:
@@ -22,7 +23,7 @@ def minimax(state, alpha: float, beta: float, max_p: bool) -> float:
             alpha = max(alpha, v)
         return v
     else:
-        v: float = np.inf
+        v = np.inf
         for successor in state.generate_successors(1):
             v = min(v, minimax(successor, alpha, beta, True))
             if v <= alpha:
