@@ -4,13 +4,13 @@ from engine import GameState, Action
 
 
 class Node:
-    def __init__(self, state: GameState, parent: GameState | None = None, pos: int | None = None) -> None:
+    def __init__(self, state: GameState, parent: 'Node | None' = None, pos: int | None = None) -> None:
         self.state: GameState = state
         self.parent = parent
         self.children: list['Node'] = []
         self.visits: int = 0
         self.wins: int = 0
-        self.pos: int = pos
+        self.pos = pos
     
     def add_child(self, child_state: GameState, pos: int) -> 'Node':
         child: Node = Node(child_state, self, pos)
@@ -26,7 +26,7 @@ class Node:
     
     def best_child(self, c: float = 1.414) -> 'Node':
         best_score: float = -np.inf
-        best_child = None
+        best_child = self
         for child in self.children:
             score: float = float(child.wins)/float(child.visits) + c * np.sqrt(np.log(self.visits)/child.visits)
             if score > best_score:
@@ -92,16 +92,16 @@ def monte_carlo_tree_search(root: Node, iterations: int, index: int, c: float) -
             if not node.is_fully_expanded():
                 node = mcts_expand(node=node, index=index)
             else:
-                node = node.best_child()        
+                node = node.best_child(c=c)        
         # Simulation: Simulate the game starting from this node's state
         result = mcts_simulate(node.state, start_index=index)
         # Backpropagation: Update the nodes along the path
         if index == 1: result *= -1
-        mcts_backpropagate(node=node, result=result)
+        mcts_backpropagate(node=node, result=int(result))
         
     
     # Return the best move (child) after the iterations
-    return root.best_child(c=c)  # c=0 to select the most visited child (exploit)
+    return root.best_child(c=0)  # c=0 to select the most visited child (exploit)
 
 
 
