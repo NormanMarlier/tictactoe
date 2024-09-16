@@ -155,7 +155,7 @@ class MinimaxController(Controller):
             successor = state.generate_successor(action)  # Generate the resulting state after the action
             
             # Use Alpha-Beta search to evaluate the value of the successor state
-            value = alpha_beta_search(successor, self.index)
+            value = alpha_beta_search(successor, bool(self.index))
 
             # Maximizing player 0 (X): update if a higher value is found
             if self.index == 0:
@@ -198,10 +198,10 @@ class MinimaxController(Controller):
 class MCTSController(Controller):
     """
     """
-    def __init__(self, index: int, simulations: int = 1000) -> None:
+    def __init__(self, index: int, simulations: int = 10000) -> None:
         super().__init__(index)
         self.simulations: int = simulations
-        self.exploration_value: float = 2.
+        self.exploration_value: float = 3.
     
     def select_move(self, state: GameState) -> Action:
 
