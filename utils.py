@@ -70,4 +70,3 @@ def inside_case(pos: tuple[int, int], board: np.ndarray) -> int:
             return -1
     else:
         return -1
-
